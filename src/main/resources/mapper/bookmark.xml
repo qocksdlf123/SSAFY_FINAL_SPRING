@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.BookmarkMapper">
+
+	<!-- resultMap -->
+	<resultMap type="bookmark" id="bookmarkMap">
+		<id property="bookmarkNo" column="bookmarkNo" />
+		<result property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="aptCode" column="aptCode"/>
+		<result property="buildingName" column="buildingName" />
+		<result property="address" column="address" />
+		<result property="roadName" column="roadName" />
+		<result property="buildYear" column="buildYear" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat" />
+		<result property="registerTime" column="registerTime" />
+	</resultMap>
+	<resultMap type="rank" id="rankMap">
+		<result property="buildingName" column="buildingName"/>
+		<result property="count" column="count"/>
+	</resultMap>
+	<!-- resultMap: END -->
+	
+	
+	<!-- SQL queries -->
+	<select id="select" parameterType="int" resultMap="bookmarkMap">
+		select * from bookmark where bookmarkNo=#{bookmarkNo}
+	</select>
+		<select id="selectById" resultMap="bookmarkMap"  parameterType="string">
+		select * from bookmark
+		where userId = #{userId}
+		order by registerTime desc
+	</select>
+	
+	<select id="selectOrderBy" resultMap="rankMap">
+	select buildingName, count(*) as count from bookmark
+	group by buildingName
+	order by count desc limit 10
+	</select>
+	
+	<insert id="insert" parameterType="bookmark">
+		insert into bookmark(userId, userName, aptCode, buildingName,address,buildYear,roadName,lat,lng)
+		values(#{userId}, #{userName}, #{aptCode}, #{buildingName},#{address},#{buildYear},#{roadName},#{lat},#{lng})
+		<selectKey resultType="int" keyProperty="bookmarkNo"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	<delete id="delete" parameterType="int">
+		delete from bookmark where bookmarkNo=#{bookmarkNo}
+	</delete>
+
+	<!-- 따로 조회수 올리는 기능 <update id="updateHit" parameterType="int"> update board 
+		set hit=hit+1 where articleNo=#{articleNo} </update> -->
+	<!-- SQL queries: END -->
+
+</mapper>

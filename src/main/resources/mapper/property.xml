@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.PropertyMapper">
+	
+	<!-- resultMap -->
+	<resultMap type="property" id="propertyMap">
+		<id property="no" column="no" />
+		<result property="aptCode" column="aptCode" />
+		<result property="apartmentName" column="apartmentName"/>
+		<result property="type" column="class" />
+		<result property="dealAmount" column="dealAmount" />
+		<result property="monthlyPay" column="monthlyPay"/>
+		<result property="area" column="area"/>
+		<result property="floor" column="floor"/>
+		<result property="detail" column="detail"/>
+		<result property="userId" column="userId"/>
+		<result property="createdDate" column="createdDate"/>
+	</resultMap>
+	<!-- resultMap: END -->
+	
+	<!-- SQL queries -->
+	<select id="selectByNo" parameterType="long" resultMap="propertyMap">
+	select * from property where no=#{no}
+	</select>
+	
+	<select id="selectByAptCode" parameterType="long" resultMap="propertyMap">
+	select * from property where aptCode=#{aptCode}
+	</select>
+	
+	<select id="selectByUserId" parameterType="string" resultMap="propertyMap">
+	select no, p.aptCode aptCode, apartmentName, class, dealAmount, monthlyPay, area, floor, detail, createdDate
+	from property p, houseInfo h
+	where userId=#{userId} and p.aptCode=h.aptCode
+	</select>
+	
+	<insert id="insert" parameterType="property">
+	insert into property(aptCode, class, dealAmount, monthlyPay, area, floor, detail, userId)
+	values(#{aptCode}, #{type}, #{dealAmount}, #{monthlyPay}, #{area}, #{floor}, #{detail}, #{userId})
+	</insert>
+	
+	<update id="update" parameterType="property">
+	update property set class=#{type}, dealAmount=#{dealAmount}, monthlyPay=#{monthlyPay}, area=#{area}, floor=#{floor}, detail=#{detail}
+	where no=#{no}
+	</update>
+	
+	<delete id="delete" parameterType="long">
+	delete from property where no=#{no}
+	</delete>
+	<!-- SQL queries: END -->
+	
+</mapper>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.CommentMapper">
+
+	<!-- resultMap -->
+	<resultMap type="comment" id="commentMap">
+		<id property="commentNo" column="commentNo" />
+		<result property="articleNo" column="articleNo" />
+		<result property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="content" column="content" />
+		<result property="registerTime" column="registerTime" />
+	</resultMap>
+	<!-- resultMap: END -->
+	<select id="select" parameterType="int" resultMap="commentMap">
+		select * from comment where commentNo=#{commentNo}
+	</select>
+		<select id="selectByBoard" resultMap="commentMap"  parameterType="int">
+		select * from comment
+		where articleNo = #{articleNo}
+		order by registerTime desc
+	</select>
+	<!-- SQL queries -->
+	<insert id="insert" parameterType="comment">
+		insert into comment(articleNo,userId, userName, content)
+		values(#{articleNo},#{userId}, #{userName}, #{content})
+		<selectKey resultType="int" keyProperty="commentNo"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<update id="update" parameterType="comment">
+		update comment set  content=#{content}
+		where commentNo=#{commentNo}
+	</update>
+
+	<delete id="delete" parameterType="int">
+		delete from comment where commentNo=#{commentNo}
+	</delete>
+
+	<!-- 따로 조회수 올리는 기능 <update id="updateHit" parameterType="int"> update board 
+		set hit=hit+1 where articleNo=#{articleNo} </update> -->
+	<!-- SQL queries: END -->
+
+</mapper>

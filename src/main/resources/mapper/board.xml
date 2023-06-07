@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.BoardMapper">
+
+	<!-- resultMap -->
+	<resultMap type="board" id="boardMap">
+		<id property="articleNo" column="articleNo" />
+		<result property="userId" column="userId" />
+		<result property="userName" column="userName" />
+		<result property="subject" column="subject" />
+		<result property="content" column="content" />
+		<result property="hit" column="hit"/>
+		<result property="registerTime" column="registerTime"/>
+	</resultMap>
+	<!-- resultMap: END -->
+	
+	<!-- SQL queries -->
+	<insert id="insert" parameterType="board">
+	insert into board(userId, userName, subject, content)
+	values(#{userId}, #{userName}, #{subject}, #{content})
+	<selectKey resultType="int" keyProperty="articleNo" order="AFTER">
+		select last_insert_id()
+	</selectKey>
+	</insert>
+	
+	<select id="select" parameterType="int" resultMap="boardMap">
+	select * from board where articleNo=#{articleNo};
+	update board set hit=hit+1 where articleNo=#{articleNo};
+	</select>
+	
+	<select id="selectAll" resultMap="boardMap">
+	select * from board
+	order by articleNo desc
+	</select>
+	
+ 	<select id="selectBySubject" resultMap="boardMap" parameterType="String">
+	select * from board
+	where subject like concat('%', #{subject}, '%')
+	order by articleNo desc
+	</select>
+	
+ 	<select id="selectById" resultMap="boardMap" parameterType="String">
+	select * from board
+	where userName like concat('%', #{userName}, '%')
+	order by articleNo desc
+	</select>
+	
+	<update id="update" parameterType="board">
+	update board set subject=#{subject}, content=#{content}
+	where articleNo=#{articleNo}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+	delete from board where articleNo=#{articleNo}
+	</delete>
+	
+	<!-- 따로 조회수 올리는 기능
+	<update id="updateHit" parameterType="int">
+	update board set hit=hit+1
+	where articleNo=#{articleNo}
+	</update>
+	-->
+	<!-- SQL queries: END -->
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.DongCodeMapper">
+
+	<!-- resultMap -->
+	<resultMap type="dongCode" id="dongCodeMap">
+		<id property="dongCode" column="dongCode" />
+		<result property="sidoName" column="sidoName" />
+		<result property="gugunName" column="gugunName" />
+		<result property="dongName" column="dongName" />
+		<result property="fullName" column="fullName"/>
+	</resultMap>
+	<!-- resultMap: END -->
+	
+	<!-- SQL queries -->
+	<select id="selectLike" parameterType="string" resultMap="dongCodeMap">
+	select dongCode, sidoName, gugunName, dongName, fullName
+	from dongCode
+	where dongCode like #{dongCode}
+	</select>
+	
+	<select id="selectEquals" parameterType="string" resultMap="dongCodeMap">
+	select dongCode, sidoName, gugunName, dongName, fullName
+	from dongCode
+	where dongCode=#{dongCode}
+	</select>
+	<!-- SQL queries: END -->
+
+</mapper>

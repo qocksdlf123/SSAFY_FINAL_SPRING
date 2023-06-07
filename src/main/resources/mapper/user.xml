@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.UserMapper">
+
+	<!-- resultMap -->
+	<resultMap type="user" id="userMap">
+		<id property="id" column="id" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="email" column="email" />
+		<result property="level" column="level" />
+		<result property="address" column="address"/>
+		<result property="registerNumber" column="registerNumber"/>
+	</resultMap>
+	
+	<resultMap type="alarm" id="alarmMap">
+		<result property="buildingName" column="buildingName"/>
+		<result property="count" column="count"/>
+	</resultMap>
+	<!-- resultMap: END -->
+	
+	<!-- SQL queries -->
+	<insert id="insert" parameterType="user">
+	insert into user(id, password, name, email, level, registerNumber, address)
+	values (#{id}, #{password}, #{name}, #{email}, #{level}, #{registerNumber}, #{address})
+	</insert>
+	
+	<select id="select" parameterType="string" resultMap="userMap">
+	select * from user where id=#{id}
+	</select>
+	
+	<update id="update" parameterType="user">
+	update user set password=#{password}, name=#{name}, email=#{email}, address=#{address}
+	where id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="string">
+	delete from user where id=#{id}
+	</delete>
+	
+	<select id="selectAlarm" parameterType="string" resultMap="alarmMap">
+	select b.buildingName, count(*) as count
+	from bookmark b, property p
+	where b.userId=#{userId} and b.aptCode = p.aptCode and b.registerTime &lt; p.createdDate
+	group by b.buildingName;
+	
+	update bookmark set registerTime=now() where userId='user';
+	</select>
+	<!-- SQL queries: END -->
+
+</mapper>

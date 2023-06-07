@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.happyhouse.model.mapper.AptMapper">
+	
+	<!-- resultMap -->
+	<resultMap type="aptInfo" id="aptInfoMap">
+		<id property="aptCode" column="aptCode" />
+		<result property="apartmentName" column="apartmentName" />
+		<result property="buildYear" column="buildYear" />
+		<result property="lng" column="lng" />
+		<result property="lat" column="lat"/>
+		<result property="roadName" column="roadName"/>
+		<result property="dongCode" column="dongCode"/>
+		<result property="address" column="address"/>
+	</resultMap>
+	
+	<resultMap type="stats" id="statsMap">
+		<id property="aptCode" column="aptCode"/>
+		<id property="dealYear" column="dealYear"/>
+		<result property="average" column="average"/>
+	</resultMap>
+	<!-- resultMap: END -->
+	
+	<!-- SQL queries -->
+	<select id="selectApt" parameterType="string" resultMap="aptInfoMap">
+	select aptCode, apartmentName, buildYear, lng, lat, roadName, dongCode, concat(dong, " ", jibun) as address
+	from houseinfo
+	where dongCode like #{dongCode}
+	</select>
+	
+	<select id="selectStats" parameterType="long" resultMap="statsMap">
+	select * from stats where aptCode=#{aptCode} order by dealYear
+	</select>
+	<!-- SQL queries: END -->
+	
+</mapper>
